@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Contact Librarian — Library AI Agent{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row g-5 justify-content-center">
+
+    <!-- ── Form Column ───────────────────────────────────── -->
+    <div class="col-lg-7">
+      <div class="mb-4">
+        <h3 class="fw-bold mb-1">
+          <i class="bi bi-envelope-heart text-primary me-2"></i>Contact the Librarian
+        </h3>
+        <p class="text-muted">Can't find what you need? Send a message and we'll respond within 24 hours.</p>
+      </div>
+
+      <div class="card border-0 rounded-4 shadow-sm p-4 p-md-5">
+        <form method="POST" action="{{ url_for('contact') }}" id="contactForm">
+
+          <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label fw-medium small">Full Name</label>
+              <input type="text" class="form-control rounded-3"
+                     value="{{ user.name }}" name="name" required />
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-medium small">Roll Number</label>
+              <input type="text" class="form-control rounded-3"
+                     value="{{ user.roll }}" name="roll" required />
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-sm-6">
+              <label class="form-label fw-medium small">Branch</label>
+              <input type="text" class="form-control rounded-3"
+                     value="{{ user.branch }}" name="branch" />
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-medium small">Semester</label>
+              <select class="form-select rounded-3" name="semester">
+                {% for i in range(1, 9) %}
+                <option value="{{ i }}" {% if i == user.semester %}selected{% endif %}>
+                  Semester {{ i }}
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-medium small">Email Address</label>
+            <input type="email" class="form-control rounded-3" name="email"
+                   placeholder="your.email@university.edu" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-medium small">Subject</label>
+            <select class="form-select rounded-3" name="subject" required>
+              <option value="">Select a subject…</option>
+              <option>Book Recommendation Request</option>
+              <option>Book Reservation Issue</option>
+              <option>Book Availability Query</option>
+              <option>New Book Purchase Request</option>
+              <option>Library Membership</option>
+              <option>Lost / Damaged Book</option>
+              <option>Other Query</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-medium small">Book Title / Subject (optional)</label>
+            <input type="text" class="form-control rounded-3" name="book_ref"
+                   placeholder="e.g. Introduction to Algorithms / Data Structures" />
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-medium small">Message</label>
+            <textarea class="form-control rounded-3" name="message" rows="5"
+                      placeholder="Describe your query in detail…" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold">
+            <i class="bi bi-send me-2"></i>Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── Info Column ───────────────────────────────────── -->
+    <div class="col-lg-4">
+
+      <!-- Library Info -->
+      <div class="card border-0 rounded-4 shadow-sm p-4 mb-4">
+        <h6 class="fw-bold mb-3"><i class="bi bi-info-circle text-primary me-2"></i>Library Information</h6>
+        <ul class="list-unstyled info-list mb-0">
+          <li>
+            <span class="label"><i class="bi bi-geo-alt text-primary me-2"></i>Location</span>
+            <span>Central Library, Block A, Ground Floor</span>
+          </li>
+          <li>
+            <span class="label"><i class="bi bi-clock text-primary me-2"></i>Hours</span>
+            <span>Mon–Sat: 8:00 AM – 8:00 PM</span>
+          </li>
+          <li>
+            <span class="label"><i class="bi bi-telephone text-primary me-2"></i>Phone</span>
+            <span>+91 98765 43210</span>
+          </li>
+          <li>
+            <span class="label"><i class="bi bi-envelope text-primary me-2"></i>Email</span>
+            <span>library@university.edu</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- AI Alternative -->
+      <div class="card border-0 rounded-4 bg-primary text-white p-4">
+        <i class="bi bi-robot fs-2 mb-3"></i>
+        <h6 class="fw-bold mb-2">Get Instant AI Help</h6>
+        <p class="small mb-3 opacity-75">
+          For book recommendations, LibraryBot can answer instantly — 24/7.
+        </p>
+        <a href="{{ url_for('chat') }}" class="btn btn-light btn-sm rounded-pill fw-semibold">
+          <i class="bi bi-chat-dots me-1"></i>Ask LibraryBot
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
