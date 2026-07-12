@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}AI Assistant — Library AI Agent{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Chat-specific overrides are here for self-containment */
+  .chat-wrapper { height: calc(100vh - 180px); min-height: 500px; }
+  .messages-area { height: 100%; overflow-y: auto; scroll-behavior: smooth; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3 px-md-4 py-3" style="max-width:1100px; margin:0 auto;">
+  <div class="row g-4" style="height:calc(100vh - 140px); min-height:600px;">
+
+    <!-- ── Sidebar ──────────────────────────────────────── -->
+    <div class="col-lg-3 d-none d-lg-flex flex-column gap-3">
+
+      <!-- LibraryBot Profile -->
+      <div class="card border-0 rounded-4 shadow-sm p-4 text-center">
+        <div class="ai-avatar mx-auto mb-3">
+          <i class="bi bi-robot"></i>
+        </div>
+        <h6 class="fw-bold mb-0">LibraryBot</h6>
+        <p class="text-muted small mb-2">IBM Granite AI</p>
+        <span class="badge bg-success rounded-pill small">
+          <i class="bi bi-circle-fill me-1" style="font-size:.5rem"></i>Online
+        </span>
+      </div>
+
+      <!-- Suggested Queries -->
+      <div class="card border-0 rounded-4 shadow-sm p-4 flex-grow-1">
+        <h6 class="fw-bold mb-3"><i class="bi bi-lightbulb text-warning me-2"></i>Try Asking</h6>
+        <div class="d-flex flex-column gap-2" id="suggestions">
+          {% set suggestions = [
+            'Recommend AI books for 3rd year CSE',
+            'Best Python books for beginners',
+            'Data Structures books for semester 3',
+            'Available Machine Learning books',
+            'I need placement preparation books',
+            'Suggest books for Computer Networks',
+            'Beginner Java programming books',
+            'Reference books for DBMS'
+          ] %}
+          {% for s in suggestions %}
+          <button class="btn btn-sm btn-outline-secondary text-start rounded-3 suggestion-btn" 
+                  data-msg="{{ s }}">
+            <i class="bi bi-chat-right-dots me-2 text-primary"></i>{{ s }}
+          </button>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Chat Area ────────────────────────────────────── -->
+    <div class="col-lg-9 d-flex flex-column" style="height:calc(100vh - 140px);">
+      <div class="card border-0 rounded-4 shadow-sm d-flex flex-column overflow-hidden h-100">
+
+        <!-- Chat Header -->
+        <div class="chat-header d-flex align-items-center justify-content-between p-3 border-bottom">
+          <div class="d-flex align-items-center gap-3">
+            <div class="ai-avatar-sm">
+              <i class="bi bi-robot"></i>
+            </div>
+            <div>
+              <p class="mb-0 fw-semibold">LibraryBot</p>
+              <span class="text-success small">
+                <i class="bi bi-circle-fill me-1" style="font-size:.45rem"></i>Powered by IBM Granite AI
+              </span>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-danger rounded-3" id="clearChatBtn" title="Clear conversation">
+            <i class="bi bi-trash me-1"></i>Clear
+          </button>
+        </div>
+
+        <!-- Messages -->
+        <div class="flex-grow-1 overflow-auto p-4" id="messagesArea">
+
+          <!-- Welcome Message -->
+          <div class="chat-msg bot-msg mb-4" id="welcomeMsg">
+            <div class="d-flex gap-3 align-items-start">
+              <div class="ai-avatar-xs flex-shrink-0">
+                <i class="bi bi-robot"></i>
+              </div>
+              <div class="msg-bubble bot-bubble-msg">
+                <p class="mb-2">
+                  👋 Hello <strong>{{ user.name.split()[0] }}</strong>! I'm <strong>LibraryBot</strong>, 
+                  your AI Library Assistant powered by IBM Granite.
+                </p>
+                <p class="mb-2">
+                  I know you're in <strong>{{ user.branch }}</strong>, Semester <strong>{{ user.semester }}</strong>.
+                  I can help you with:
+                </p>
+                <ul class="mb-2 ps-3">
+                  <li>📚 Book recommendations by subject or branch</li>
+                  <li>🎯 Placement &amp; competitive exam prep</li>
+                  <li>🌐 Online learning resources</li>
+                  <li>📖 Beginner to advanced level books</li>
+                  <li>🔍 Library availability queries</li>
+                </ul>
+                <p class="mb-0 text-muted small">What would you like to explore today?</p>
+              </div>
+            </div>
+            <div class="text-muted small ms-5 mt-1">
+              <i class="bi bi-clock me-1"></i>Just now
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Typing Indicator (hidden by default) -->
+        <div id="typingIndicator" class="px-4 pb-2 d-none">
+          <div class="d-flex gap-3 align-items-center">
+            <div class="ai-avatar-xs flex-shrink-0">
+              <i class="bi bi-robot"></i>
+            </div>
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-area border-top p-3">
+          <!-- Mobile suggestions -->
+          <div class="d-flex gap-2 overflow-auto pb-2 d-lg-none">
+            {% for s in ['Recommend AI books', 'Python for beginners', 'Placement books'][:3] %}
+            <button class="btn btn-sm btn-outline-secondary rounded-pill text-nowrap suggestion-btn flex-shrink-0"
+                    data-msg="{{ s }}">{{ s }}</button>
+            {% endfor %}
+          </div>
+
+          <div class="input-group input-group-lg">
+            <input type="text" class="form-control rounded-start-4 border-end-0"
+                   id="chatInput"
+                   placeholder="Ask for book recommendations…"
+                   style="box-shadow:none;"
+                   maxlength="500" />
+            <button class="btn btn-primary rounded-end-4 px-4" id="sendBtn">
+              <i class="bi bi-send-fill"></i>
+            </button>
+          </div>
+          <p class="text-muted small mt-2 mb-0 text-center">
+            <i class="bi bi-shield-check me-1 text-success"></i>
+            Powered by IBM watsonx.ai — responses are AI-generated for academic guidance only.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script>
+  // Pre-fill from URL param
+  const urlParams = new URLSearchParams(window.location.search);
+  const qParam = urlParams.get('q');
+  if (qParam) {
+    document.getElementById('chatInput').value = qParam;
+    document.getElementById('sendBtn').click();
+  }
+</script>
+{% endblock %}
