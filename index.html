@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% block title %}Home — Library AI Agent{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero Section ──────────────────────────────────────── -->
+<section class="hero-section">
+  <div class="container py-5">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 mb-3">
+          <i class="bi bi-stars me-1"></i>Powered by IBM Granite AI
+        </span>
+        <h1 class="display-5 fw-bold lh-sm mb-3">
+          Your Smart AI<br>
+          <span class="text-primary">Library Assistant</span>
+        </h1>
+        <p class="lead text-muted mb-4">
+          Get instant, personalised book recommendations based on your branch, semester, 
+          and academic goals. Ask in plain English — LibraryBot understands you.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{{ url_for('chat') }}" class="btn btn-primary btn-lg rounded-pill px-4">
+            <i class="bi bi-robot me-2"></i>Ask AI Assistant
+          </a>
+          <a href="{{ url_for('search') }}" class="btn btn-outline-primary btn-lg rounded-pill px-4">
+            <i class="bi bi-search me-2"></i>Search Books
+          </a>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row g-3 mt-4">
+          <div class="col-auto">
+            <div class="stat-chip">
+              <i class="bi bi-book text-primary"></i>
+              <span class="fw-semibold">{{ recent_books|length * 3 }}+</span>
+              <span class="text-muted small">Books</span>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="stat-chip">
+              <i class="bi bi-robot text-primary"></i>
+              <span class="fw-semibold">IBM</span>
+              <span class="text-muted small">Granite AI</span>
+            </div>
+          </div>
+          <div class="col-auto">
+            <div class="stat-chip">
+              <i class="bi bi-lightning text-primary"></i>
+              <span class="fw-semibold">Real-time</span>
+              <span class="text-muted small">Availability</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 text-center">
+        <div class="hero-illustration">
+          <div class="hero-card-1 floating">
+            <i class="bi bi-robot fs-1 text-primary"></i>
+            <p class="mb-0 mt-1 small fw-semibold">AI Assistant</p>
+          </div>
+          <div class="hero-card-2 floating-delayed">
+            <i class="bi bi-book-half fs-1 text-success"></i>
+            <p class="mb-0 mt-1 small fw-semibold">Smart Library</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Quick Search Bar ───────────────────────────────────── -->
+<section class="py-4 bg-body-secondary">
+  <div class="container">
+    <form action="{{ url_for('search') }}" method="GET">
+      <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden">
+        <span class="input-group-text bg-body border-end-0 ps-4">
+          <i class="bi bi-search text-primary"></i>
+        </span>
+        <input type="text" class="form-control border-start-0 border-end-0"
+               name="q" placeholder="Search by title, author, subject, keyword…"
+               style="box-shadow:none;" />
+        <button type="submit" class="btn btn-primary px-4">Search</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ── Features Section ───────────────────────────────────── -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Everything You Need</h2>
+      <p class="text-muted">Smart tools to power your academic journey</p>
+    </div>
+    <div class="row g-4">
+      {% set features = [
+        ('robot','AI Book Recommendations','Ask LibraryBot for personalised recommendations by branch, semester, or topic.','primary'),
+        ('search','Smart Book Search','Search by title, author, subject, category, or any keyword instantly.','success'),
+        ('bookmark-check','Reserve Books','Reserve available books or join the waitlist for unavailable titles.','warning'),
+        ('graph-up','Study Resources','Get curated online learning resources alongside physical book suggestions.','info'),
+        ('people','Placement Prep','Get aptitude, reasoning, and DSA books tailored for campus placements.','danger'),
+        ('chat-dots','Conversation Memory','LibraryBot remembers your conversation context for smarter answers.','purple')
+      ] %}
+      {% for icon, title, desc, color in features %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="feature-card card h-100 border-0 rounded-4 p-4 hover-lift">
+          <div class="feature-icon mb-3 text-{{ color }}">
+            <i class="bi bi-{{ icon }} fs-2"></i>
+          </div>
+          <h6 class="fw-semibold mb-2">{{ title }}</h6>
+          <p class="text-muted small mb-0">{{ desc }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── AI Chat Teaser ─────────────────────────────────────── -->
+<section class="py-5 bg-body-secondary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card border-0 rounded-4 shadow-sm overflow-hidden">
+          <div class="card-body p-0">
+            <!-- Chat Header -->
+            <div class="chat-preview-header d-flex align-items-center gap-3 p-3">
+              <div class="ai-avatar-sm">
+                <i class="bi bi-robot"></i>
+              </div>
+              <div>
+                <p class="mb-0 fw-semibold">LibraryBot</p>
+                <span class="badge bg-success rounded-pill" style="font-size:0.65rem">
+                  <i class="bi bi-circle-fill me-1" style="font-size:0.5rem"></i>Online
+                </span>
+              </div>
+            </div>
+            <!-- Sample Conversation -->
+            <div class="p-4">
+              <div class="chat-bubble bot-bubble mb-3">
+                <strong>LibraryBot:</strong> Hi! I'm your AI Library Assistant powered by IBM Granite.
+                Ask me to recommend books for any subject, branch, or semester!
+              </div>
+              <div class="chat-bubble user-bubble mb-3">
+                <strong>You:</strong> I'm a 3rd year CSE student. Recommend AI books.
+              </div>
+              <div class="chat-bubble bot-bubble">
+                <strong>LibraryBot:</strong> Great choice! Here are my top AI book recommendations for 3rd year CSE:
+                <br><br>
+                1. <strong>AI: A Modern Approach</strong> — Russell &amp; Norvig (Advanced)<br>
+                2. <strong>Hands-On ML with Scikit-Learn</strong> — Géron (Intermediate)<br>
+                3. <strong>Deep Learning</strong> — Goodfellow et al. (Advanced)
+              </div>
+            </div>
+            <div class="p-3 border-top text-center">
+              <a href="{{ url_for('chat') }}" class="btn btn-primary rounded-pill px-4">
+                <i class="bi bi-chat-dots me-2"></i>Start Chatting with LibraryBot
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Recently Added Books ───────────────────────────────── -->
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h4 class="fw-bold mb-1">Recently Recommended</h4>
+        <p class="text-muted small mb-0">Popular books across all departments</p>
+      </div>
+      <a href="{{ url_for('search') }}" class="btn btn-sm btn-outline-primary rounded-pill">
+        View All <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="row g-4">
+     <div class="col-sm-6 col-md-4 col-lg-3 col-xl-2">
+      <div class="col-sm-6 col-md-4 col-xl-2-4">
+        <div class="card book-card h-100 border-0 rounded-4 shadow-sm hover-lift">
+          <div class="book-cover text-center p-3 rounded-top-4">
+            <i class="bi bi-book-half display-5 text-primary opacity-75"></i>
+          </div>
+          <div class="card-body p-3">
+            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill small mb-2">{{ book.category }}</span>
+            <h6 class="fw-semibold mb-1 book-title-clamp">{{ book.title }}</h6>
+            <p class="text-muted small mb-2">{{ book.author }}</p>
+            <span class="badge {{ 'bg-success' if book.available else 'bg-danger' }} bg-opacity-15 
+                         {{ 'text-success' if book.available else 'text-danger' }} rounded-pill small">
+              <i class="bi {{ 'bi-check-circle' if book.available else 'bi-x-circle' }} me-1"></i>
+              {{ 'Available' if book.available else 'Unavailable' }}
+            </span>
+          </div>
+          <div class="card-footer bg-transparent border-0 p-3 pt-0">
+            <a href="{{ url_for('book_detail', book_id=book.id) }}" 
+               class="btn btn-sm btn-outline-primary w-100 rounded-3">View Details</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}
