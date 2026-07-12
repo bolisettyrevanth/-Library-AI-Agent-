@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} — Library AI Agent{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- ── Breadcrumb ────────────────────────────────────── -->
+  <nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('search') }}">Search</a></li>
+      <li class="breadcrumb-item active text-truncate" style="max-width:200px">{{ book.title }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-5">
+    <!-- ── Left Column ─────────────────────────────────── -->
+    <div class="col-lg-4">
+      <!-- Book Cover Card -->
+      <div class="card border-0 rounded-4 shadow-sm text-center p-5 mb-4">
+        <i class="bi bi-book-half display-1 text-primary opacity-75"></i>
+        <div class="mt-3">
+          <span class="badge {{ 'bg-success' if book.available else 'bg-danger' }} rounded-pill px-3 py-2">
+            <i class="bi {{ 'bi-check-circle-fill' if book.available else 'bi-x-circle-fill' }} me-1"></i>
+            {{ 'Available' if book.available else 'Unavailable' }}
+          </span>
+        </div>
+        {% if book.available %}
+        <p class="text-muted small mt-2 mb-0">
+          <i class="bi bi-stack me-1"></i>{{ book.copies }} cop{{ 'y' if book.copies == 1 else 'ies' }} left
+        </p>
+        {% endif %}
+      </div>
+
+      <!-- Book Details Card -->
+      <div class="card border-0 rounded-4 shadow-sm p-4 mb-4">
+        <h6 class="fw-bold mb-3">Book Information</h6>
+        <ul class="list-unstyled mb-0 info-list">
+          <li>
+            <span class="label"><i class="bi bi-journal text-primary me-2"></i>Edition</span>
+            <span>{{ book.edition }}</span>
+          </li>
+          <li>
+            <span class="label"><i class="bi bi-building text-primary me-2"></i>Publication</span>
+            <span>{{ book.publication }}</span>
+          </li>
+          <li>
+            <span class="label"><i class="bi bi-tag text-primary me-2"></i>Category</span>
+            <span>{{ book.category }}</span>
+          </li>
+          <li>
+            <span class="label"><i class="bi bi-bar-chart text-primary me-2"></i>Level</span>
+            <span>
+              <span class="badge rounded-pill
+                {% if book.difficulty == 'Beginner' %}bg-success bg-opacity-15 text-success
+                {% elif book.difficulty == 'Intermediate' %}bg-warning bg-opacity-15 text-warning
+                {% else %}bg-danger bg-opacity-15 text-danger{% endif %}">
+                {{ book.difficulty }}
+              </span>
+            </span>
+          </li>
+          <li>
+            <span class="label"><i class="bi bi-geo-alt text-primary me-2"></i>Shelf</span>
+            <span class="badge bg-secondary bg-opacity-15 text-secondary">{{ book.shelf }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-grid gap-2">
+        {% if is_reserved %}
+        <button class="btn btn-outline-danger rounded-3" id="cancelBtn" data-book-id="{{ book.id }}">
+          <i class="bi bi-x-circle me-2"></i>Cancel Reservation
+        </button>
+        {% elif is_waitlisted %}
+        <button class="btn btn-warning rounded-3" disabled>
+          <i class="bi bi-clock me-2"></i>On Waitlist
+        </button>
+        {% elif book.available %}
+        <button class="btn btn-success btn-lg rounded-3" id="reserveBtn" data-book-id="{{ book.id }}">
+          <i class="bi bi-bookmark-plus me-2"></i>Reserve This Book
+        </button>
+        {% else %}
+        <button class="btn btn-warning btn-lg rounded-3" id="reserveBtn" data-book-id="{{ book.id }}">
+          <i class="bi bi-clock me-2"></i>Join Waitlist
+        </button>
+        {% endif %}
+        <a href="{{ url_for('chat') }}?q=Tell me more about {{ book.title }}" 
+           class="btn btn-outline-primary rounded-3">
+          <i class="bi bi-robot me-2"></i>Ask AI about this book
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Right Column ────────────────────────────────── -->
+    <div class="col-lg-8">
+      <!-- Title & Author -->
+      <div class="mb-4">
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3">{{ book.category }}</span>
+          <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill px-3">{{ book.subject }}</span>
+        </div>
+        <h2 class="fw-bold mb-2">{{ book.title }}</h2>
+        <p class="fs-5 text-muted mb-0">
+          <i class="bi bi-person-circle me-2"></i>{{ book.author }}
+        </p>
+      </div>
+
+      <!-- Description -->
+      <div class="card border-0 rounded-4 bg-body-secondary p-4 mb-4">
+        <h6 class="fw-bold mb-2"><i class="bi bi-card-text text-primary me-2"></i>About This Book</h6>
+        <p class="mb-0 lh-lg">{{ book.description }}</p>
+      </div>
+
+      <!-- AI Recommendation Reason -->
+      <div class="card border-0 rounded-4 border-start border-primary border-4 ps-4 p-4 mb-4">
+        <h6 class="fw-bold mb-2 text-primary">
+          <i class="bi bi-stars me-2"></i>Why This Book is Recommended
+        </h6>
+        <p class="mb-0 text-muted">
+          This book is highly recommended for <strong>{{ book.category }}</strong> students 
+          at the <strong>{{ book.difficulty }}</strong> level. 
+          Published by <strong>{{ book.publication }}</strong>, it covers 
+          <strong>{{ book.subject }}</strong> comprehensively and is widely used in 
+          university curricula. The {{ book.edition }} includes the latest developments 
+          in the field.
+        </p>
+      </div>
+
+      <!-- Tags -->
+      <div class="mb-4">
+        <h6 class="fw-bold mb-2"><i class="bi bi-tags text-primary me-2"></i>Keywords</h6>
+        <div class="d-flex flex-wrap gap-2">
+          {% for tag in book.tags %}
+          <a href="{{ url_for('search') }}?q={{ tag }}" 
+             class="badge bg-body border text-muted text-decoration-none rounded-pill px-3 py-2 small hover-tag">
+            {{ tag }}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Similar Books -->
+      {% if similar %}
+      <div>
+        <h5 class="fw-bold mb-3">
+          <i class="bi bi-collection text-primary me-2"></i>Similar Books You Might Like
+        </h5>
+        <div class="row g-3">
+          {% for s in similar %}
+          <div class="col-sm-6">
+            <div class="card border-0 rounded-4 shadow-sm hover-lift p-3">
+              <div class="d-flex gap-3 align-items-start">
+                <div class="book-icon-sm flex-shrink-0">
+                  <i class="bi bi-book text-primary fs-4"></i>
+                </div>
+                <div class="flex-grow-1 overflow-hidden">
+                  <h6 class="fw-semibold mb-1 book-title-clamp">{{ s.title }}</h6>
+                  <p class="text-muted small mb-2">{{ s.author }}</p>
+                  <div class="d-flex gap-1">
+                    <span class="badge {{ 'bg-success' if s.available else 'bg-danger' }} bg-opacity-15 
+                                 {{ 'text-success' if s.available else 'text-danger' }} rounded-pill small">
+                      {{ 'Available' if s.available else 'Unavailable' }}
+                    </span>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary rounded-pill small">{{ s.difficulty }}</span>
+                  </div>
+                </div>
+              </div>
+              <a href="{{ url_for('book_detail', book_id=s.id) }}" 
+                 class="btn btn-sm btn-outline-primary w-100 mt-2 rounded-3">View Details</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const reserveBtn = document.getElementById('reserveBtn');
+const cancelBtn  = document.getElementById('cancelBtn');
+
+if (reserveBtn) {
+  reserveBtn.addEventListener('click', function () {
+    const bookId = this.dataset.bookId;
+    this.disabled = true;
+    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing…';
+    fetch(`/api/reserve/${bookId}`, { method: 'POST' })
+      .then(r => r.json())
+      .then(data => {
+        showToast(data.message, data.status === 'reserved' ? 'success' : 'info');
+        setTimeout(() => location.reload(), 1800);
+      });
+  });
+}
+
+if (cancelBtn) {
+  cancelBtn.addEventListener('click', function () {
+    if (!confirm('Are you sure you want to cancel this reservation?')) return;
+    const bookId = this.dataset.bookId;
+    fetch(`/api/cancel/${bookId}`, { method: 'POST' })
+      .then(r => r.json())
+      .then(data => {
+        showToast(data.message, 'warning');
+        setTimeout(() => location.reload(), 1800);
+      });
+  });
+}
+</script>
+{% endblock %}
