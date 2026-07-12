@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Login — Library AI Agent{% endblock %}
+
+{% block content %}
+<div class="login-page d-flex align-items-center justify-content-center min-vh-100">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+
+        <!-- Brand Header -->
+        <div class="text-center mb-4">
+          <div class="login-logo mb-3">
+            <i class="bi bi-book-half"></i>
+          </div>
+          <h2 class="fw-bold">Library<span class="text-primary">AI</span> Agent</h2>
+          <p class="text-muted">AI-Powered Smart Library System</p>
+        </div>
+
+        <!-- Card -->
+        <div class="card login-card border-0 shadow-lg rounded-4 overflow-hidden">
+          <div class="card-header-bar"></div>
+          <div class="card-body p-4 p-md-5">
+            <h5 class="fw-semibold mb-1">Welcome Back</h5>
+            <p class="text-muted small mb-4">Sign in with your student credentials</p>
+
+            <form method="POST" action="{{ url_for('login') }}" id="loginForm" novalidate>
+              <div class="mb-3">
+                <label class="form-label fw-medium small" for="username">
+                  <i class="bi bi-person me-1 text-primary"></i>Username
+                </label>
+                <input type="text" class="form-control form-control-lg rounded-3"
+                       id="username" name="username" placeholder="e.g. student1"
+                       required autocomplete="username" />
+              </div>
+
+              <div class="mb-4">
+                <label class="form-label fw-medium small" for="password">
+                  <i class="bi bi-lock me-1 text-primary"></i>Password
+                </label>
+                <div class="input-group">
+                  <input type="password" class="form-control form-control-lg rounded-start-3"
+                         id="password" name="password" placeholder="Enter password"
+                         required autocomplete="current-password" />
+                  <button class="btn btn-outline-secondary rounded-end-3" type="button" id="togglePwd">
+                    <i class="bi bi-eye" id="eyeIcon"></i>
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg w-100 rounded-3 fw-semibold">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+              </button>
+            </form>
+
+            <!-- Demo Credentials -->
+            <div class="demo-box mt-4 p-3 rounded-3">
+              <p class="mb-2 small fw-semibold text-muted"><i class="bi bi-info-circle me-1"></i>Demo Credentials</p>
+              <div class="row g-2">
+                <div class="col-6">
+                  <button class="btn btn-sm btn-outline-secondary w-100 demo-btn" 
+                          data-user="demo" data-pass="demo">
+                    <i class="bi bi-person-badge me-1"></i>Demo
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-sm btn-outline-secondary w-100 demo-btn" 
+                          data-user="student1" data-pass="pass123">
+                    <i class="bi bi-mortarboard me-1"></i>Student 1
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features list -->
+        <div class="mt-4 text-center">
+          <div class="d-flex justify-content-center flex-wrap gap-3 text-muted small">
+            <span><i class="bi bi-robot text-primary me-1"></i>AI Recommendations</span>
+            <span><i class="bi bi-search text-primary me-1"></i>Smart Search</span>
+            <span><i class="bi bi-bookmark text-primary me-1"></i>Book Reserve</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Password visibility toggle
+  document.getElementById('togglePwd').addEventListener('click', function () {
+    const pwd = document.getElementById('password');
+    const icon = document.getElementById('eyeIcon');
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      icon.className = 'bi bi-eye-slash';
+    } else {
+      pwd.type = 'password';
+      icon.className = 'bi bi-eye';
+    }
+  });
+
+  // Demo credential fill
+  document.querySelectorAll('.demo-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.getElementById('username').value = this.dataset.user;
+      document.getElementById('password').value = this.dataset.pass;
+    });
+  });
+</script>
+{% endblock %}
