@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library AI Agent | Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="mainNav shadow-sm sticky-top">
+        <a href="index.html" class="nav-brand">Library AI</a>
+        <div class="nav-links">
+            <a href="index.html" class="active">Home</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="search.html">Search</a>
+            <a href="contact.html">Contact</a>
+            <a href="chat.html">AI Assistant</a>
+            <a href="login.html">Logout</a>
+        </div>
+        <div class="nav-profile">
+            <i class="bi bi-person-circle"></i>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center text-white">
+        <div class="container py-5">
+            <h1 class="display-3 fw-bold">Your Smart AI Library Assistant</h1>
+            <p class="lead mb-5">Seamlessly search, reserve, and manage your academic reading. Powered by intelligent insights and real-time availability.</p>
+            <div class="hero-btns">
+                <a href="search.html" class="btn btn-primary btn-lg shadow-sm">Search Books</a>
+                <a href="chat.html" class="btn btn-outline-primary btn-lg shadow-sm">Ask AI</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content container mt-5">
+        
+        <section class="search-wrap mb-5 shadow-sm rounded-pill p-3 px-5 d-flex align-items-center">
+            <i class="bi bi-search text-muted me-3"></i>
+            <input type="text" class="form-control form-control-lg border-0 bg-transparent flex-grow-1 shadow-none" placeholder="Search by title, author, subject, keyword...">
+            <button class="btn btn-primary btn-lg rounded-pill px-4 ms-3">Go</button>
+        </section>
+
+        <section class="book-grid mb-5">
+            <h2 class="text-secondary fw-bold mb-4">Popular in Computer Science</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                
+                <div class="col">
+                    <div class="book-card card h-100 shadow-sm border-0 rounded-card p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <i class="bi bi-book-half text-primary fs-3"></i>
+                            <span class="badge rounded-pill bg-success p-2">Available</span>
+                        </div>
+                        <h4 class="card-title fw-semibold">Deep Learning with Python</h4>
+                        <p class="text-muted small">Authored by: F. Chollet</p>
+                        <p class="card-text text-muted">A practical guide covering modern deep learning concepts using Keras and Python.</p>
+                        <div class="mt-auto d-flex gap-2">
+                            <a href="#" class="btn btn-outline-secondary btn-sm rounded-pill w-100">Details</a>
+                            <a href="#" class="btn btn-primary btn-sm rounded-pill w-100">Reserve</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="book-card card h-100 shadow-sm border-0 rounded-card p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <i class="bi bi-book-half text-primary fs-3"></i>
+                            <span class="badge rounded-pill bg-danger p-2">Unavailable</span>
+                        </div>
+                        <h4 class="card-title fw-semibold">Design Patterns</h4>
+                        <p class="text-muted small">Authored by: Gamma et al.</p>
+                        <p class="card-text text-muted">A seminal text defining standard object-oriented design patterns. Crucial for CS graduates.</p>
+                        <div class="mt-auto d-flex gap-2">
+                            <a href="#" class="btn btn-outline-secondary btn-sm rounded-pill w-100">Details</a>
+                            <a href="#" class="btn btn-outline-danger btn-sm rounded-pill w-100">Waitlist</a>
+                        </div>
+                    </div>
+                </div>
+
+                </div>
+        </section>
+
+        <section class="stat-grid mb-5">
+            <h2 class="text-secondary fw-bold mb-4">Library at a Glance</h2>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+                
+                <div class="col">
+                    <div class="stat-card card shadow-sm border-0 rounded-card p-4 text-center">
+                        <i class="bi bi-book-half text-primary display-4 mb-3"></i>
+                        <h3 class="fw-bold mb-1">1,232</h3>
+                        <p class="text-muted small">Total Books</p>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="stat-card card shadow-sm border-0 rounded-card p-4 text-center">
+                        <i class="bi bi-check-circle text-success display-4 mb-3"></i>
+                        <h3 class="fw-bold mb-1">465</h3>
+                        <p class="text-muted small">Available Now</p>
+                    </div>
+                </div>
+
+                 <div class="col">
+                    <div class="stat-card card shadow-sm border-0 rounded-card p-4 text-center">
+                        <i class="bi bi-bookmark-check text-info display-4 mb-3"></i>
+                        <h3 class="fw-bold mb-1">10</h3>
+                        <p class="text-muted small">My Reservations</p>
+                    </div>
+                </div>
+
+                 <div class="col">
+                    <div class="stat-card card shadow-sm border-0 rounded-card p-4 text-center">
+                        <i class="bi bi-clock-history text-danger display-4 mb-3"></i>
+                        <h3 class="fw-bold mb-1">6</h3>
+                        <p class="text-muted small">Waitlisted</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center text-muted small py-4 border-top mt-auto">
+        Library AI Agent © 2024 | Powered by IBM watsonx.ai/Granite.
+    </footer>
+
+</body>
+</html>
